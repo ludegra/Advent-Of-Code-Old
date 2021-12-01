@@ -1,8 +1,5 @@
 use utils::input::read_input_lines;
 
-mod part1;
-mod part2;
-
 fn main() {
     let input: Vec<i32> = read_input_lines("assets/input.txt").unwrap().iter().map(|s| s.parse().unwrap()).collect();
 
