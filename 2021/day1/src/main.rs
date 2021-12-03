@@ -1,7 +1,7 @@
 use utils::input::read_input_lines;
 
 fn main() {
-    let input: Vec<i32> = read_input_lines("assets/input.txt").unwrap().iter().map(|s| s.parse().unwrap()).collect();
+    let input: Vec<i32> = read_input_lines("assets/input_beaver.txt").unwrap().iter().map(|s| s.parse().unwrap()).collect();
 
     let mut increase_counter = 0;
     let mut old = None;
