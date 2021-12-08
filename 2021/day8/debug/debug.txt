@@ -1,0 +1,10 @@
+SevenSegmentDisplay {
+    a: ['d'],
+    b: ['g'],
+    c: ['b'],
+    d: ['c'],
+    e: ['a'],
+    f: ['e'],
+    g: ['f'],
+    
+    zero: Some("abdefg"), one: Some("be"), two: Some("abcdf"), three: Some("abcdf"), four: Some("bceg"), five: Some("cdefg"), six: Some("acdefg"), seven: Some("bde"), eight: Some("abcdefg"), nine: Some("bcdefg") }

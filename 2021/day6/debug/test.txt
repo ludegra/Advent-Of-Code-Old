@@ -1,0 +1,65 @@
+Fish { timer: 3, time_left: 18 }
+{
+    Fish { timer: 8, time_left: 15 }
+    {
+        Fish { timer: 8, time_left: 7 } -> 1
+    }
+
+    Fish { timer: 8, time_left: 15 } -> 2
+    Fish { timer: 8, time_left: 8 } -> 1
+    Fish { timer: 8, time_left: 1 } -> 1
+}
+
+
+Fish { timer: 4, time_left: 18 }
+{
+    Fish { timer: 8, time_left: 14 }
+    {
+        Fish { timer: 8, time_left: 6 } -> 1
+    }
+
+    Fish { timer: 8, time_left: 14 } -> 2
+    Fish { timer: 8, time_left: 7 } -> 1
+}
+
+
+Fish { timer: 1, time_left: 18 }
+{
+
+    Fish { timer: 8, time_left: 17 }
+    {
+
+        Fish { timer: 8, time_left: 9 }
+        {
+            Fish { timer: 8, time_left: 1 } -> 1
+        }
+
+        Fish { timer: 8, time_left: 9 } -> 2
+        Fish { timer: 8, time_left: 2 } -> 1
+    }
+
+    Fish { timer: 8, time_left: 17 } -> 4
+
+    Fish { timer: 8, time_left: 10 }
+    {
+        Fish { timer: 8, time_left: 2 } -> 1
+    }
+
+    Fish { timer: 8, time_left: 10 } -> 2
+    Fish { timer: 8, time_left: 3 } -> 1
+}
+
+
+Fish { timer: 2, time_left: 18 }
+{
+
+    Fish { timer: 8, time_left: 16 }
+    {
+        Fish { timer: 8, time_left: 8 } -> 1
+        Fish { timer: 8, time_left: 1 } -> 1
+    }
+
+    Fish { timer: 8, time_left: 16 } -> 3
+    Fish { timer: 8, time_left: 9 } -> 2
+    Fish { timer: 8, time_left: 2 } -> 1
+}

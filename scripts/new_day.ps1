@@ -13,7 +13,7 @@ function New-Day {
     }
     if ( !(Test-Path -Path "./$Year/day$Day") )
     {
-        cargo new --lib "./$Year/day$Day"
+        cargo new --bin "./$Year/day$Day"
         New-Item -Path "./$Year/day$Day/assets" -ItemType Directory
         New-Item -Path "./$Year/day$Day/assets/input.txt" -ItemType File
         New-Item -Path "./$Year/day$Day/assets/test.txt" -ItemType File
@@ -21,6 +21,6 @@ function New-Day {
         New-Item -Path "./$Year/day$Day/src/part1.rs" -ItemType File
         New-Item -Path "./$Year/day$Day/src/part2.rs" -ItemType File
         New-Item -Path "./$Year/day$Day/src/structs.rs" -ItemType File
-        Add-Content -Path "./$Year/day$Day/cargo.toml" -Value "utils = { path = `"../../utils`" }"
+        Add-Content -Path "./$Year/day$Day/Cargo.toml" -Value "utils = { path = `"../../utils`" }"
     }
 }
