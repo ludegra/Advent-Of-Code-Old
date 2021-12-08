@@ -1,20 +1,11 @@
-use crate::structs::SevenSegmentDisplay;
-
 pub fn part1(input: &Vec<(Vec<String>, Vec<String>)>) {
-    for (signals, data) in input.clone() {
-        let mut display = SevenSegmentDisplay::new();
-
-        display.solve_segments(signals);
-        println!("{:?}", display);
-
+    let mut sum = 0;
+    for (_, data) in input.clone() {
         for code in data {
-            if let Some(number) = display.decode(code.clone()) {
-                println!("{} -> {}", code, number);
-            }
-            else {
-                println!("{} -> None", code)
+            if code.len() == 2 || code.len() == 3 || code.len() == 4|| code.len() == 7 {
+                sum += 1;
             }
         }
-        println!("");
     }
+    println!("Part 1: {}", sum);
 }

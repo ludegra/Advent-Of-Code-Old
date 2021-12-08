@@ -22,7 +22,6 @@ pub struct SevenSegmentDisplay {
     nine: Option<String>,
 }
 impl SevenSegmentDisplay {
-
     pub fn new() -> Self {
         Self {
             a: vec!['a', 'b', 'c', 'd', 'e', 'f', 'g'],
@@ -97,47 +96,45 @@ impl SevenSegmentDisplay {
                     for wire in signal.chars() {
                         remaining = remaining.replace(wire, "");
                     }
+                    let remaining = remaining.chars().collect::<Vec<char>>();
 
-                    println!("{}", remaining);
-                    println!("{:?}\n", self);
+                    if self['b'].contains(&remaining[0]) && self['f'].contains(&remaining[1]) {
+                        self.two = Some(signal.clone());
 
-                    for wire in remaining.chars() {
-                        if self['c'].contains(&wire) {
-                            // fixa logik 2, 3, 5
-                            if !self['b'].contains(&wire) {
-                                self.five = Some(signal.clone());
-                            }
-                            else {
-                                self.two = Some(signal.clone());
-                            }
-
-                            self['e'] = vec![remaining.replace(wire, "").chars().next().unwrap()];
-
-                            if self['c'].len() > 1 {
-                                self['c'] = vec![wire];
-                                self['f'] = vec![self.one.clone().unwrap().replace(wire, "").chars().next().unwrap()];
-                            }
-                        }
-                        else if self['f'].contains(&wire) {
-                            if !self['b'].contains(&wire) {
-                                self.five = Some(signal.clone());
-                            }
-                            else {
-                                self.two = Some(signal.clone());
-                            }
-
-                            self['b'] = vec![remaining.replace(wire, "").chars().next().unwrap()];
-
-                            if self['f'].len() > 1 {
-                                self['f'] = vec![wire];
-                                self['c'] = vec![self.one.clone().unwrap().replace(wire, "").chars().next().unwrap()];
-                            }
-                        }
-                        else {
-
-                        }
+                        self['b'] = vec![remaining[0]];
+                        self['f'] = vec![remaining[1]];
+                        self['c'] = vec![self
+                            .one
+                            .clone()
+                            .unwrap()
+                            .replace(remaining[1], "")
+                            .chars()
+                            .next()
+                            .unwrap()
+                        ];
                     }
-                },
+                    else if self['b'].contains(&remaining[1]) && self['f'].contains(&remaining[0]){
+                        self.two = Some(signal.clone());
+
+                        self['b'] = vec![remaining[1]];
+                        self['f'] = vec![remaining[0]];
+                        self['c'] = vec![self
+                            .one
+                            .clone()
+                            .unwrap()
+                            .replace(remaining[0], "")
+                            .chars()
+                            .next()
+                            .unwrap()
+                        ];
+                    }
+                    else if !self['b'].contains(&remaining[0]) && !self['b'].contains(&remaining[1]) {
+                        self.five = Some(signal.clone());
+                    }
+                    else {
+                        self.three = Some(signal.clone());
+                    }
+                }
                 6 => {
                     let mut remaining = "abcdefg".to_string();
 
@@ -150,11 +147,9 @@ impl SevenSegmentDisplay {
                     if self['d'].contains(&remaining) {
                         self.zero = Some(signal.clone());
                         self['d'] = vec![remaining];
-                    }
-                    else if self['c'].contains(&remaining) {
+                    } else if self['c'].contains(&remaining) {
                         self.six = Some(signal.clone());
-                    }
-                    else {
+                    } else {
                         self.nine = Some(signal.clone());
                     }
                 }
