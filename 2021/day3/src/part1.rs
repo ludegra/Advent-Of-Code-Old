@@ -1,4 +1,4 @@
-pub fn part1(input: &Vec<Vec<char>>) {
+pub fn part1(input: &Vec<Vec<char>>) -> (String, String) {
     let mut common_chars = String::with_capacity(input[0].len());
     let mut uncommon_chars = String::with_capacity(input[0].len());
 
@@ -22,5 +22,7 @@ pub fn part1(input: &Vec<Vec<char>>) {
     let gamma = isize::from_str_radix(&common_chars, 2).unwrap();
     let epsilon = isize::from_str_radix(&uncommon_chars, 2).unwrap();
 
-    println!("Part 1: {}", epsilon * gamma)
+    println!("Part 1: {}", epsilon * gamma);
+
+    (common_chars, uncommon_chars)
 }

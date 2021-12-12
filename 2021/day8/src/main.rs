@@ -1,17 +1,21 @@
+use std::time::Instant;
+
 use part1::part1;
+use part2::part2;
 
 mod part1;
 mod part2;
 mod structs;
 
 fn main() {
-    let input = include_str!("../assets/test.txt")
+    let start = Instant::now();
+    let input = include_str!("../assets/input.txt")
         .trim()
         .split('\n')
         .map(|s| {
             let mut split = s.split(" | ")
                 .map(|s| {
-                    s.split(' ').map(|s| s.to_string()).collect::<Vec<String>>()
+                    s.trim().split(' ').map(|s| s.to_string()).collect::<Vec<String>>()
                 })
                 .collect::<Vec<_>>();
             split[0].sort_by(|a, b| a.len().cmp(&b.len()));
@@ -19,5 +23,18 @@ fn main() {
         })
         .collect::<Vec<_>>();
 
+    println!("Input time: {}µs", start.elapsed().as_micros());
+    println!("--------------------");
+    let start = Instant::now();
+
     part1(&input);
+
+    println!("Part 1 time: {}µs", start.elapsed().as_micros());
+    println!("--------------------");
+    let start = Instant::now();
+
+    part2(&input);
+
+    println!("Part 2 time: {}µs", start.elapsed().as_micros());
+    println!("--------------------");
 }
