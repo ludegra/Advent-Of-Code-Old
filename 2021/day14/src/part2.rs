@@ -11,7 +11,14 @@ pub fn part2(base_polymer: &Vec<char>, insertion_pairs: &HashMap<(char, char), c
         *entry += 1;
     }
 
-    for _ in  0..40 { 
+    let mut char_counter = HashMap::new();
+
+    for component in base_polymer {
+        let entry = char_counter.entry(*component).or_insert(0u64);
+        *entry += 1;
+    }
+
+    for _ in  0..40 {
         let mut new_pair_map = HashMap::new();
 
         for (pair, number) in &pair_map {
@@ -22,6 +29,9 @@ pub fn part2(base_polymer: &Vec<char>, insertion_pairs: &HashMap<(char, char), c
 
                     let entry = new_pair_map.entry((*component, pair.1)).or_insert(0);
                     *entry += number;
+
+                    let entry = char_counter.entry(*component).or_insert(0);
+                    *entry += number;
                 }
                 None => {
                     let entry = new_pair_map.entry(*pair).or_insert(0);
@@ -31,5 +41,9 @@ pub fn part2(base_polymer: &Vec<char>, insertion_pairs: &HashMap<(char, char), c
         }
         pair_map = new_pair_map;
     }
-    print!("{:?}", pair_map);
+
+    let mut char_counter = char_counter.values().map(|s| *s).collect::<Vec<_>>();
+    char_counter.sort();
+
+    println!("Part 2: {}", char_counter.last().unwrap() - char_counter[0])
 }

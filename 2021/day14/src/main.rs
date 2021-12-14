@@ -10,7 +10,7 @@ fn main() {
     let polymer: Vec<char>;
     let mut insertion_pairs: HashMap<(char, char), char> = HashMap::new();
 
-    let mut input = include_str!("../assets/input.txt").trim().split("\n\n");
+    let mut input = include_str!("../assets/input_ludegra.txt").trim().split("\n\n");
     polymer = input.next().unwrap().chars().collect::<Vec<_>>();
     input.next().unwrap().split('\n').for_each(|x| {
         let chars = x.chars().collect::<Vec<_>>();
