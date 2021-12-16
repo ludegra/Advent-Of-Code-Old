@@ -1,72 +1,53 @@
-use crate::structs::Point;
+use crate::{
+    part1::part1,
+    structs::{Point, Print},
+};
 
-pub fn part2(input: &Vec<Vec<Point>>) {
-    let mut grid = Vec::with_capacity(input.len() * 5);
+pub fn part2(input: &[Vec<Point>]) {
+    let mut grid = Vec::with_capacity(input.len());
 
-    for y_modifyer in 0..5 {
-        for row in input {
-            let mut full_row = Vec::with_capacity(input[0].len() * 5);
-            for x_modifyer in 0..5 {
-                full_row.append(
-                    &mut row
+    for row in input {
+        let mut true_row = Vec::with_capacity(row.len() * 5);
+        let row_len = row.len();
+        for modifyer in 0..5 {
+            true_row.append(
+                &mut row
                     .iter()
                     .map(|s| {
-                            let mut value = (s.value + x_modifyer + y_modifyer) % 9;
-                            if value == 0 { value = 9 }
-                            
-                            Point {
-                            value,
-                            ..*s
-                        }})
-                        .collect::<Vec<Point>>(),
-                );
-            }
-            grid.push(full_row);
+                        let mut new_value = s.original_value + modifyer;
+                        if new_value > 9 {
+                            new_value -= 9;
+                        }
+
+                        Point::new(s.x + row_len, s.y, new_value)
+                    })
+                    .collect::<Vec<Point>>(),
+            );
+        }
+        grid.push(true_row);
+    }
+    // grid.print(1);
+
+    let mut true_grid = Vec::with_capacity(input.len() * 5);
+
+    let grid_len = grid.len();
+    for modifyer in 0..5 {
+        for row in grid.clone() {
+            true_grid.push(
+                row.iter()
+                    .map(|s| {
+                        let mut new_value = s.original_value + modifyer;
+                        if new_value > 9 {
+                            new_value -= 9;
+                        }
+
+                        Point::new(s.x, s.y + grid_len, new_value)
+                    })
+                    .collect::<Vec<Point>>(),
+            );
         }
     }
-    grid[0][0].value = 0;
+    // true_grid.print(1);
 
-    for y in (0..grid.len()).rev() {
-        for x in (0..grid[0].len()).rev() {
-            let mut neighbors = Vec::with_capacity(2);
-            if x < grid[y].len() - 1 {
-                neighbors.push(grid[y][x + 1]);
-            }
-            if y < grid.len() - 1 {
-                neighbors.push(grid[y + 1][x])
-            }
-            grid[y][x].set_value(&neighbors[..]);
-        }
-    }
-
-    let mut has_changed = true;
-    while has_changed {
-        has_changed = false;
-        for y in (0..grid.len()).rev() {
-            for x in (0..grid[0].len()).rev() {
-                let mut neighbors = Vec::with_capacity(2);
-                if x < grid[y].len() - 1 {
-                    neighbors.push(grid[y][x + 1]);
-                }
-                if x > 0 {
-                    neighbors.push(grid[y][x - 1]);
-                }
-                if y < grid.len() - 1 {
-                    neighbors.push(grid[y + 1][x]);
-                }
-                if y > 0 {
-                    neighbors.push(grid[y - 1][x])
-                }
-                if y < grid.len() - 1 && x < grid[y].len() - 1 {
-                    let old_value = grid[y][x].value.clone(); 
-                    grid[y][x].set_value(&neighbors[..]);
-                    if old_value != grid[y][x].value {
-                        has_changed = true;
-                    }
-                }
-            }
-        }
-    }
-
-    println!("Part 2: {}", grid[0][0].value)
+    part1(&true_grid);
 }

@@ -8,7 +8,7 @@ mod structs;
 
 fn main() {
     let (mut x, mut y) = (0, 0);
-    let input = include_str!("../assets/test.txt")
+    let input = include_str!("../assets/input_ludegra.txt")
         .trim()
         .split('\n')
         .map(|s| {
