@@ -7,11 +7,10 @@ pub struct Package {
 }
 impl Package {
     pub fn new(binary: &str) -> (Self, String) {
-        println!("{}", binary);
-
         let version = u32::from_str_radix(&binary[0..3], 2).unwrap();
         let type_id = u32::from_str_radix(&binary[3..6], 2).unwrap();
-
+        
+        // println!("{}", binary);
         // println!("Version: {}", version);
         // println!("Type: {}", type_id);
 
