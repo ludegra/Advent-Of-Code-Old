@@ -1,0 +1,2 @@
+split av nummer stlrre än 20?
+splitkedjor
