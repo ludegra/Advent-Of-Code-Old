@@ -5,7 +5,7 @@ mod part1;
 mod part2;
 
 fn main() {
-    let input = include_str!("../assets/input.txt")
+    let input = include_str!("../assets/test.txt")
         .trim()
         .split('\n')
         .map(|s| {

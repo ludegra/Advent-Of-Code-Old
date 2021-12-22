@@ -1,180 +1,103 @@
-use std::collections::HashMap;
-
 pub fn part2(input: &Vec<(bool, (isize, isize), (isize, isize), (isize, isize))>) {
-    // let map = HashMap::new();
+    let mut cubes = Vec::new();
 
-    // let mut intertwined = false;
+    for (active, x, y, z) in input {
+        if *active {
+            add_cube(&mut cubes, (*active, *x, *y, *z))
+        } else {
+        }
+    }
+    println!("{:?}", cubes);
 }
 
-enum Overlapping {
-    Left,
-    Right,
-    Enclosed,
-    Encloses,
-}
+fn add_cube(
+    cubes: &mut Vec<((isize, isize), (isize, isize), (isize, isize))>,
+    cube: (bool, (isize, isize), (isize, isize), (isize, isize)),
+) {
+    let (active, x, y, z) = cube;
 
-fn split_cube(
-    cube: ((isize, isize), (isize, isize), (isize, isize)),
-    intertwined: ((isize, isize), (isize, isize), (isize, isize)),
-) -> Option<Vec<((isize, isize), (isize, isize), (isize, isize))>> {
-    // Splitting into more easily worked-with variables
-    let ((x_start_cube, x_end_cube), (y_start_cube, y_end_cube), (z_start_cube, z_end_cube)) = cube;
-    let (
-        (x_start_intersecting, x_end_intersecting),
-        (y_start_intersecting, y_end_intersecting),
-        (z_start_intersecting, z_end_intersecting),
-    ) = intertwined;
+    let matching_x = find_in_dimension(cubes, (x, y, z), Dimension::X);
+    let matching_y = find_in_dimension(&matching_x, (x, y, z), Dimension::Y);
+    let matching = find_in_dimension(&matching_y, (x, y, z), Dimension::Z);
 
-    // Checkning relative positions
-    let x_overlap = match type_of_overlap(
-        x_start_cube,
-        x_end_cube,
-        x_start_intersecting,
-        x_end_intersecting,
-    ) {
-        Some(overlap) => overlap,
-        None => return None,
-    };
-    let y_overlap = match type_of_overlap(
-        y_start_cube,
-        y_end_cube,
-        y_start_intersecting,
-        y_end_intersecting,
-    ) {
-        Some(overlap) => overlap,
-        None => return None,
-    };
-    let z_overlap = match type_of_overlap(
-        z_start_cube,
-        z_end_cube,
-        z_start_intersecting,
-        z_end_intersecting,
-    ) {
-        Some(overlap) => overlap,
-        None => return None,
-    };
-
-    match x_overlap {
-        Overlapping::Left => {}
-        Overlapping::Right => {}
-        Overlapping::Enclosed => {}
-        Overlapping::Encloses => match y_overlap {
-            Overlapping::Left => {}
-            Overlapping::Right => {}
-            Overlapping::Enclosed => match z_overlap {
-                Overlapping::Left => {}
-                Overlapping::Right => {}
-                Overlapping::Enclosed => {
-                    return Some(vec![
-                        (
-                            (x_start_cube, x_end_cube),
-                            (y_start_cube, y_end_cube),
-                            (z_start_cube, z_start_intersecting - 1),
-                        ),
-                        (
-                            (x_start_cube, x_end_cube),
-                            (y_start_cube, y_end_cube),
-                            (z_end_intersecting + 1, z_end_cube),
-                        ),
-                        (
-                            (x_start_cube, x_end_cube),
-                            (y_start_cube, y_start_intersecting - 1),
-                            (z_start_intersecting, z_end_intersecting),
-                        ),
-                        (
-                            (x_start_cube, x_end_cube),
-                            (y_end_intersecting + 1, y_end_cube),
-                            (z_start_intersecting, z_end_intersecting),
-                        ),
-                    ])
-                }
-                Overlapping::Encloses => {
-                    return Some(vec![
-                        (
-                            (x_start_cube, x_end_cube),
-                            (y_start_cube, y_start_intersecting - 1),
-                            (z_start_cube, z_end_cube),
-                        ),
-                        (
-                            (x_start_cube, x_end_cube),
-                            (y_end_intersecting + 1, y_end_cube),
-                            (z_start_cube, z_end_cube),
-                        ),
-                    ])
-                }
-            },
-            Overlapping::Encloses => match z_overlap {
-                Overlapping::Left => {
-                    return Some(vec![(
-                        (x_start_cube, x_end_cube),
-                        (y_start_cube, y_end_cube),
-                        (z_end_intersecting + 1, z_end_cube),
-                    )])
-                }
-                Overlapping::Right => {
-                    return Some(vec![(
-                        (x_start_cube, x_end_cube),
-                        (y_start_cube, y_end_cube),
-                        (z_start_cube, z_start_intersecting - 1),
-                    )])
-                }
-                Overlapping::Enclosed => {
-                    return Some(vec![
-                        (
-                            (x_start_cube, x_end_cube),
-                            (y_start_cube, y_end_cube),
-                            (z_start_cube, z_start_intersecting - 1),
-                        ),
-                        (
-                            (x_start_cube, x_end_cube),
-                            (y_start_cube, y_end_cube),
-                            (z_end_intersecting + 1, z_end_cube),
-                        ),
-                    ])
-                }
-                Overlapping::Encloses => return Some(Vec::new()),
-            },
-        },
-    }
-
-    None
-}
-
-fn type_of_overlap(
-    start_cube: isize,
-    end_cube: isize,
-    start_intersecting: isize,
-    end_intersecting: isize,
-) -> Option<Overlapping> {
-    let overlap: Overlapping;
-
-    // IIIIII
-    //    XXXXXXX
-    if start_intersecting < start_cube
-        && end_intersecting > start_cube
-        && end_intersecting < end_cube
-    {
-        overlap = Overlapping::Left;
-    }
-    //   IIIIIII
-    // XXXXX
-    else if start_cube < start_intersecting
-        && end_cube > start_intersecting
-        && end_cube < end_intersecting
-    {
-        overlap = Overlapping::Right;
-    }
-    //  IIIIII
-    // XXXXXXXXXX
-    else if start_cube < start_intersecting && end_cube > end_intersecting {
-        overlap = Overlapping::Enclosed;
-    }
-    // IIIIIIIIIIIIIII
-    //   XXXXXXXX
-    else if start_cube > start_intersecting && end_cube < end_intersecting {
-        overlap = Overlapping::Enclosed;
+    if matching.is_empty() && active {
+        cubes.push((x, y, z))
     } else {
-        return None;
+        println!("\nCube: x: {}..{}, y: {}..{}, z: {}..{}", x.0, x.1, y.0, y.1, z.0, z.1);
+        for (x2, y2, z2) in matching {
+            let x_overlap = if x.0 > x2.0 { (x2.0, x.0) } else { (x.0, x2.0) };
+            let y_overlap = if y.0 > y2.0 { (y2.0, y.0) } else { (y.0, y2.0) };
+            let z_overlap = if z.0 > z2.0 { (z2.0, z.0) } else { (z.0, z2.0) };
+
+            println!("    x: {}..{}, y: {}..{}, z: {}..{}", x_overlap.0, x_overlap.1, y_overlap.0, y_overlap.1, z_overlap.0, z_overlap.1)
+
+            // let new_cubes = vec![
+            //     ()  
+            // ];
+        }
     }
-    Some(overlap)
+
+    // else {
+    //     println!("\nCube: x: {}..{}, y: {}..{}, z: {}..{}", x.0, x.1, y.0, y.1, z.0, z.1);
+    //     println!("Matching:");
+    //     for (x, y, z) in matching {
+    //         println!("  x: {}..{}, y: {}..{}, z: {}..{}", x.0, x.1, y.0, y.1, z.0, z.1);
+    //     }
+    // }
+}
+
+enum Dimension {
+    X,
+    Y,
+    Z,
+}
+
+fn find_in_dimension(
+    cubes: &Vec<((isize, isize), (isize, isize), (isize, isize))>,
+    cube: ((isize, isize), (isize, isize), (isize, isize)),
+    dimension: Dimension,
+) -> Vec<((isize, isize), (isize, isize), (isize, isize))> {
+    match dimension {
+        Dimension::X => {
+            // (x.0 < cube.0.0 && cube.0.0 < x.1) || (x.0 < cube.0.1 && cube.0.1 < x.1)
+
+            let mut out = Vec::new();
+
+            for old_cube in cubes {
+                let (x, _, _) = old_cube;
+
+                if (x.0 <= cube.0 .0 && cube.0 .0 <= x.1) || (x.0 <= cube.0 .1 && cube.0 .1 <= x.1)
+                {
+                    out.push(*old_cube);
+                }
+            }
+            out
+        }
+        Dimension::Y => {
+            let mut out = Vec::new();
+
+            for old_cube in cubes {
+                let (_, y, _) = old_cube;
+
+                if (y.0 <= cube.0 .0 && cube.0 .0 <= y.1) || (y.0 <= cube.0 .1 && cube.0 .1 <= y.1)
+                {
+                    out.push(*old_cube);
+                }
+            }
+            out
+        }
+        Dimension::Z => {
+            let mut out = Vec::new();
+
+            for old_cube in cubes {
+                let (_, _, z) = old_cube;
+
+                if (z.0 <= cube.0 .0 && cube.0 .0 <= z.1) || (z.0 <= cube.0 .1 && cube.0 .1 <= z.1)
+                {
+                    out.push(*old_cube);
+                }
+            }
+            out
+        }
+    }
 }
